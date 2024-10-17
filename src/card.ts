@@ -1,5 +1,7 @@
 import * as THREE from 'three'
-import { GameEvents, GameObject } from './game-object'
+import { GameObject } from './game-object'
+import { EventEmitter } from './event-emitter'
+import { createMaterial } from './material'
 
 const ROTATION_STEP = 0.4
 
@@ -13,22 +15,14 @@ export type CardProps = {
 
 export class Card implements GameObject {
   mesh: THREE.Mesh
-  eventEmitter = new THREE.EventDispatcher<{ click: {} }>()
 
+  private eventEmitter = new EventEmitter()
   private isFlipped = false
 
   constructor(props: CardProps) {
-    const borderTexture = new THREE.TextureLoader().load('./bg-stone.jpg')
-    borderTexture.colorSpace = THREE.SRGBColorSpace
-    const borderMaterial = new THREE.MeshBasicMaterial({ map: borderTexture })
-  
-    const frontTexture = new THREE.TextureLoader().load(props.front)
-    frontTexture.colorSpace = THREE.SRGBColorSpace
-    const frontMaterial = new THREE.MeshBasicMaterial({ map: frontTexture })
-  
-    const backTexture = new THREE.TextureLoader().load(props.back)
-    backTexture.colorSpace = THREE.SRGBColorSpace
-    const backMaterial = new THREE.MeshBasicMaterial({ map: backTexture })
+    const borderMaterial = createMaterial({ texture: './bg-stone.jpg' })
+    const frontMaterial = createMaterial({ texture: props.front })
+    const backMaterial = createMaterial({ texture: props.back })
   
     const geometry = new THREE.BoxGeometry(props.width, props.height, props.depth)
 
@@ -50,13 +44,12 @@ export class Card implements GameObject {
     this.isFlipped = !this.isFlipped
   }
 
-  on(event: keyof GameEvents, callback: (event: GameEvents[keyof GameEvents]) => void) {
-    this.eventEmitter.addEventListener(event, callback)
-    return () => this.eventEmitter.removeEventListener(event, callback)
+  get on() {
+    return this.eventEmitter.on.bind(this.eventEmitter)
   }
 
-  dispatch(event: keyof GameEvents) {
-    this.eventEmitter.dispatchEvent({ type: event })
+  get dispatch() {
+    return this.eventEmitter.dispatch.bind(this.eventEmitter)
   }
 
   update() {

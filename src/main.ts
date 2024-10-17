@@ -1,6 +1,8 @@
+import './style.css'
+
 import { createCard } from './card'
 import { createCardEngine } from './card-engine'
-import './style.css'
+import { createArea } from './area'
 
 const engine = createCardEngine()
 engine.init()
@@ -13,6 +15,12 @@ const card = createCard({
   back: './carnival-midway.jpg',
 })
 
+const area = createArea({
+  width: 10,
+  height: 10,
+  texture: './bg-table2.jpg',
+})
+
 const handleClick = () => {
   console.log('clicked')
   card.flip()
@@ -21,3 +29,4 @@ const handleClick = () => {
 card.on('click', handleClick)
 
 engine.add(card)
+engine.add(area)

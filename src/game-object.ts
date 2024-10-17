@@ -1,8 +1,5 @@
 import * as THREE from 'three'
-
-export type GameEvents = {
-  click: {}
-}
+import { GameEvents } from './event-emitter'
 
 export type GameObject = {
   uuid: string
