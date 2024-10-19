@@ -19,7 +19,8 @@ export function createCardEngine() {
       0.1,
       100
     )
-    camera.position.z = 2
+    camera.position.z = 5
+    camera.position.y = -0.5
 
     scene = new THREE.Scene()
     objects = new Map()
@@ -36,8 +37,8 @@ export function createCardEngine() {
     controls.update()
     controls.enablePan = false
     controls.enableDamping = true
+    controls.enableRotate = false
     renderer.setAnimationLoop(animate)
-    //
 
     window.addEventListener('resize', onWindowResize)
     window.addEventListener('mousemove', onMouseMove)

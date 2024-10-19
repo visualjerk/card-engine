@@ -7,6 +7,11 @@ export type AreaProps = {
   width: number
   height: number
   texture: string
+  position?: {
+    x: number
+    y: number
+    z: number
+  }
 }
 
 export class Area implements GameObject {
@@ -22,6 +27,10 @@ export class Area implements GameObject {
       geometry,
       material
     )
+    
+    if (props.position) {
+      this.mesh.position.set(props.position.x, props.position.y, props.position.z)
+    }
   }
 
   get uuid() {

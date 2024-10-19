@@ -15,12 +15,6 @@ const card = createCard({
   back: './carnival-midway.jpg',
 })
 
-const area = createArea({
-  width: 10,
-  height: 10,
-  texture: './bg-table2.jpg',
-})
-
 const handleClick = () => {
   console.log('clicked')
   card.flip()
@@ -28,5 +22,23 @@ const handleClick = () => {
 
 card.on('click', handleClick)
 
+const table = createArea({
+  width: 10,
+  height: 8,
+  texture: './bg-table2.jpg',
+})
+
+const playerArea = createArea({
+  width: 8,
+  height: 2,
+  texture: './bg-table.jpg',
+  position: {
+    x: 0,
+    y: -3,
+    z: 0,
+  },
+})
+
 engine.add(card)
-engine.add(area)
+engine.add(table)
+engine.add(playerArea)
