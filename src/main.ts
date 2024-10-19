@@ -75,6 +75,6 @@ function initCard() {
   card.placeOn(playerDeck)
 }
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 28; i++) {
   initCard()
 }
