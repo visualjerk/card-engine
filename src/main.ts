@@ -15,16 +15,25 @@ const card = createCard({
   back: './carnival-midway.jpg',
 })
 
+let isAttached = false
+
 const handleClick = () => {
   console.log('clicked')
   card.flip()
+  
+  isAttached = !isAttached
+  if (isAttached) {
+    card.attachTo(playerArea)
+  } else {
+    card.attachTo(table)
+  }
 }
 
 card.on('click', handleClick)
 
 const table = createArea({
   width: 10,
-  height: 8,
+  height: 7,
   texture: './bg-table2.jpg',
 })
 
@@ -34,7 +43,7 @@ const playerArea = createArea({
   texture: './bg-table.jpg',
   position: {
     x: 0,
-    y: -3,
+    y: -2.5,
     z: 0,
   },
 })

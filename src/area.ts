@@ -2,16 +2,13 @@ import * as THREE from 'three'
 import { EventEmitter } from "./event-emitter"
 import { GameObject } from "./game-object"
 import { createMaterial } from './material'
+import { Position } from './position'
 
 export type AreaProps = {
   width: number
   height: number
   texture: string
-  position?: {
-    x: number
-    y: number
-    z: number
-  }
+  position?: Position
 }
 
 export class Area implements GameObject {
@@ -27,7 +24,7 @@ export class Area implements GameObject {
       geometry,
       material
     )
-    
+
     if (props.position) {
       this.mesh.position.set(props.position.x, props.position.y, props.position.z)
     }

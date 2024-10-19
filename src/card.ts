@@ -2,8 +2,11 @@ import * as THREE from 'three'
 import { GameObject } from './game-object'
 import { EventEmitter } from './event-emitter'
 import { createMaterial } from './material'
+import { Area } from './area'
+import { Position } from './position'
 
 const ROTATION_STEP = 0.4
+const POSITION_STEP = 0.1
 
 export type CardProps = {
   height: number
@@ -11,6 +14,7 @@ export type CardProps = {
   depth: number
   front: string
   back: string
+  position?: Position
 }
 
 export class Card implements GameObject {
@@ -18,6 +22,11 @@ export class Card implements GameObject {
 
   private eventEmitter = new EventEmitter()
   private isFlipped = false
+  private position: Position = {
+    x: 0,
+    y: 0,
+    z: 0,
+  }
 
   constructor(props: CardProps) {
     const borderMaterial = createMaterial({ texture: './bg-stone.jpg' })
@@ -34,6 +43,11 @@ export class Card implements GameObject {
       frontMaterial,
       backMaterial,
     ])
+
+    if (props.position) {
+      this.position = props.position
+      this.mesh.position.set(this.position.x, this.position.y, this.position.z)
+    }
   }
 
   get uuid() {
@@ -42,6 +56,14 @@ export class Card implements GameObject {
 
   flip() {
     this.isFlipped = !this.isFlipped
+  }
+
+  attachTo(area: Area) {
+    this.position = {
+      x: area.mesh.position.x,
+      y: area.mesh.position.y,
+      z: area.mesh.position.z,
+    }
   }
 
   get on() {
@@ -53,6 +75,11 @@ export class Card implements GameObject {
   }
 
   update() {
+    this.updateFlipRotation()
+    this.updatePosition()
+  }
+
+  private updateFlipRotation() {
     // Calculate the target rotation for the card
     const targetRotation = this.isFlipped ? Math.PI : 0;
 
@@ -68,6 +95,17 @@ export class Card implements GameObject {
     // Otherwise, continue rotating
     const rotationStep = this.isFlipped ? ROTATION_STEP : -ROTATION_STEP;
     this.mesh.rotation.y += rotationStep
+  }
+
+  private updatePosition() {
+    // Update the mesh step by step towards the target position
+    const targetX = this.position.x
+    const targetY = this.position.y
+    const targetZ = this.position.z
+
+    this.mesh.position.x += (targetX - this.mesh.position.x) * POSITION_STEP
+    this.mesh.position.y += (targetY - this.mesh.position.y) * POSITION_STEP
+    this.mesh.position.z += (targetZ - this.mesh.position.z) * POSITION_STEP
   }
 }
 
