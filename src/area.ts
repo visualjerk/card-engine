@@ -5,7 +5,7 @@ import { createMaterial } from './material'
 import { Position } from './position'
 import { Card } from './card'
 
-export type CardPlacement = 'stack' | 'grid' |'fanned'
+export type CardPlacement = 'stack' | 'grid' | 'fan'
 
 export type AreaProps = {
   width: number
@@ -87,7 +87,7 @@ export class Area implements GameObject {
       this.placeCardsStacked()
     } else if (this.cardPlacement === 'grid') {
       this.placeCardsGrid()
-    } else if (this.cardPlacement === 'fanned') {
+    } else if (this.cardPlacement === 'fan') {
       this.placeCardsFanned()
     }
   }
