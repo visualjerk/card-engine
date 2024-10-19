@@ -35,7 +35,6 @@ export function createCardEngine() {
 
     controls = new OrbitControls(camera, renderer.domElement)
     controls.update()
-    controls.enablePan = false
     controls.enableDamping = true
     controls.enableRotate = false
     renderer.setAnimationLoop(animate)

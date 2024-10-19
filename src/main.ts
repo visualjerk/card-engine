@@ -44,7 +44,7 @@ const playerArea = createArea({
   position: {
     x: 0,
     y: -2.5,
-    z: 0,
+    z: 0.001,
   },
 })
 
