@@ -40,8 +40,8 @@ export function createCardEngine() {
     renderer.setAnimationLoop(animate)
 
     window.addEventListener('resize', onWindowResize)
-    window.addEventListener('mousemove', onMouseMove)
-    window.addEventListener('click', onClick)
+    window.addEventListener('pointermove', onMouseMove)
+    window.addEventListener('pointerup', onClick)
   }
 
   function onWindowResize() {
