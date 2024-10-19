@@ -28,7 +28,7 @@ const playerArea = createArea({
 engine.add(table)
 engine.add(playerArea)
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
   const card = createCard({
     width: 0.6,
     height: 1,

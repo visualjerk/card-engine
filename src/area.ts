@@ -107,15 +107,16 @@ export class Area implements GameObject {
 
     const columns = Math.floor((this.width + spacing) / (cardWidth + spacing))
 
-    const rowWidth = (cardWidth + spacing) * (this.cards.length % columns) - spacing
+    const rowWidth = (cardWidth + spacing) * Math.min(this.cards.length, columns) - spacing
+    const columnHeight = (cardHeight + spacing) * Math.ceil(this.cards.length / columns) - spacing
 
     this.cards.forEach((card, index) => {
       const column = index % columns
       const row = Math.floor(index / columns)
       
       card.move({
-        x: this.mesh.position.x + (column * cardWidth) + (column * spacing) - rowWidth / 2,
-        y: this.mesh.position.y - (row * cardHeight) - (row * spacing),
+        x: this.mesh.position.x + (column * cardWidth) + (column * spacing) - rowWidth / 2 + cardWidth / 2,
+        y: this.mesh.position.y - (row * cardHeight) - (row * spacing) + columnHeight / 2 - cardHeight / 2,
         z: this.mesh.position.z
       })
     })
