@@ -31,10 +31,10 @@ export class Card implements GameObject {
   private props: CardProps
 
   constructor(props: CardProps) {
-    const borderMaterial = createMaterial({ texture: './bg-stone.jpg' })
+    const borderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 })
     const frontMaterial = createMaterial({ texture: props.front })
     const backMaterial = createMaterial({ texture: props.back })
-  
+
     const geometry = new THREE.BoxGeometry(props.width, props.height, props.depth)
 
     this.mesh = new THREE.Mesh(geometry, [
