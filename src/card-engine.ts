@@ -61,9 +61,8 @@ export function createCardEngine() {
     if (firstIntersect == null) {
       return
     }
-    
-    const object = objects.get(firstIntersect.object.uuid)
 
+    const object = objects.get(firstIntersect.object.uuid)
     object?.dispatch('click')
   }
 

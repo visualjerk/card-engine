@@ -2,8 +2,8 @@ import * as THREE from 'three'
 import { GameObject } from './game-object'
 import { EventEmitter } from './event-emitter'
 import { createMaterial } from './material'
-import { Area } from './area'
 import { Position } from './position'
+import { Area } from './area'
 
 const ROTATION_STEP = 0.4
 const POSITION_STEP = 0.1
@@ -27,6 +27,7 @@ export class Card implements GameObject {
     y: 0,
     z: 0,
   }
+  private area?: Area
 
   constructor(props: CardProps) {
     const borderMaterial = createMaterial({ texture: './bg-stone.jpg' })
@@ -58,12 +59,17 @@ export class Card implements GameObject {
     this.isFlipped = !this.isFlipped
   }
 
-  attachTo(area: Area) {
-    this.position = {
-      x: area.mesh.position.x,
-      y: area.mesh.position.y,
-      z: area.mesh.position.z,
+  move(position: Position) {
+    this.position = position
+  }
+
+  placeOn(area: Area) {
+    if (this.area) {
+      this.area.remove(this)
     }
+
+    this.area = area
+    area.add(this)
   }
 
   get on() {
