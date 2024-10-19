@@ -26,6 +26,7 @@ export class Card implements GameObject {
     y: 0,
     z: 0,
   }
+  private rotation = 0
   private area?: Area
   private props: CardProps
 
@@ -71,6 +72,10 @@ export class Card implements GameObject {
     this.position = position
   }
 
+  rotate(rotation: number) {
+    this.rotation = rotation
+  }
+
   placeOn(area: Area) {
     if (this.area) {
       this.area.remove(this)
@@ -91,6 +96,7 @@ export class Card implements GameObject {
   update() {
     this.updateFlipRotation()
     this.updatePosition()
+    this.updateRotation()
   }
 
   private updateFlipRotation() {
@@ -109,6 +115,11 @@ export class Card implements GameObject {
     // Otherwise, continue rotating
     const rotationStep = this.isFlipped ? ROTATION_STEP : -ROTATION_STEP;
     this.mesh.rotation.y += rotationStep
+  }
+
+  private updateRotation() {
+    // Update the mesh step by step towards the target rotation
+    this.mesh.rotation.z += (this.rotation - this.mesh.rotation.z) * ROTATION_STEP
   }
 
   private updatePosition() {

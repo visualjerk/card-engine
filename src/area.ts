@@ -87,11 +87,14 @@ export class Area implements GameObject {
       this.placeCardsStacked()
     } else if (this.cardPlacement === 'grid') {
       this.placeCardsGrid()
+    } else if (this.cardPlacement === 'fanned') {
+      this.placeCardsFanned()
     }
   }
 
   private placeCardsStacked() {
     this.cards.forEach((card, index) => {
+      card.rotate(0)
       card.move({
         x: this.mesh.position.x,
         y: this.mesh.position.y,
@@ -114,12 +117,35 @@ export class Area implements GameObject {
       const column = index % columns
       const row = Math.floor(index / columns)
       
+      card.rotate(0)
       card.move({
         x: this.mesh.position.x + (column * cardWidth) + (column * spacing) - rowWidth / 2 + cardWidth / 2,
         y: this.mesh.position.y - (row * cardHeight) - (row * spacing) + columnHeight / 2 - cardHeight / 2,
         z: this.mesh.position.z
       })
     })
+  }
+
+  private placeCardsFanned() {
+    const fanAngle = Math.min(Math.PI / 40 * this.cards.length, Math.PI / 4); // Max 45 degrees total fan spread
+    const fanRadius = this.width / 2
+    const centerAngle = -Math.PI / 2 // Center the fan at the top of the area
+
+    this.cards.forEach((card, index) => {
+      let cardAngle;
+      if (this.cards.length === 1) {
+        cardAngle = centerAngle;
+      } else {
+        cardAngle = centerAngle + (index / (this.cards.length - 1) - 0.5) * fanAngle;
+      }
+
+      card.rotate(cardAngle + Math.PI / 2); // Rotate card to face outward
+      card.move({
+        x: this.mesh.position.x + Math.cos(cardAngle) * fanRadius,
+        y: this.mesh.position.y - Math.sin(cardAngle) * fanRadius,
+        z: this.mesh.position.z + index * 0.01 // Slight z-offset for layering
+      });
+    });
   }
 }
 

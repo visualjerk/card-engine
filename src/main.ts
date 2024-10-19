@@ -23,6 +23,7 @@ const playerArea = createArea({
     y: -2.5,
     z: 0.001,
   },
+  cardPlacement: 'fanned',
 })
 
 engine.add(table)
