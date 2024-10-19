@@ -142,7 +142,7 @@ export class Area implements GameObject {
       card.rotate(cardAngle + Math.PI / 2); // Rotate card to face outward
       card.move({
         x: this.mesh.position.x + Math.cos(cardAngle) * fanRadius,
-        y: this.mesh.position.y - Math.sin(cardAngle) * fanRadius,
+        y: this.mesh.position.y - Math.sin(cardAngle) * fanRadius - fanRadius + card.height / 4,
         z: this.mesh.position.z + index * 0.01 // Slight z-offset for layering
       });
     });
