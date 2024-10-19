@@ -79,6 +79,10 @@ export class Area implements GameObject {
   }
 
   private placeCards() {
+    if (this.cards.length === 0) {
+      return
+    }
+
     if (this.cardPlacement === 'stack') {
       this.placeCardsStacked()
     } else if (this.cardPlacement === 'grid') {
@@ -101,17 +105,17 @@ export class Area implements GameObject {
     const cardWidth = this.cards[0].width
     const cardHeight = this.cards[0].height
 
-    // TODO: Fix this
-    const columns = Math.floor((this.width - spacing) / cardWidth)
-    const rows = Math.floor((this.height - spacing) / cardHeight)
+    const columns = Math.floor((this.width + spacing) / (cardWidth + spacing))
+
+    const rowWidth = (cardWidth + spacing) * (this.cards.length % columns) - spacing
 
     this.cards.forEach((card, index) => {
       const column = index % columns
-      const row = Math.floor(index / rows)
+      const row = Math.floor(index / columns)
       
       card.move({
-        x: this.mesh.position.x + (column * cardWidth) + (column * spacing),
-        y: this.mesh.position.y + (row * cardHeight) + (row * spacing),
+        x: this.mesh.position.x + (column * cardWidth) + (column * spacing) - rowWidth / 2,
+        y: this.mesh.position.y - (row * cardHeight) - (row * spacing),
         z: this.mesh.position.z
       })
     })
