@@ -19,6 +19,8 @@ export class Area implements GameObject {
   mesh: THREE.Mesh
 
   private eventEmitter = new EventEmitter()
+  private props: AreaProps
+
   private cardPlacement: CardPlacement = 'stack'
   private cards: Card[] = []
 
@@ -38,6 +40,8 @@ export class Area implements GameObject {
     if (props.cardPlacement) {
       this.cardPlacement = props.cardPlacement
     }
+
+    this.props = props
   }
 
   get uuid() {
@@ -50,6 +54,14 @@ export class Area implements GameObject {
 
   get dispatch() {
     return this.eventEmitter.dispatch.bind(this.eventEmitter)
+  }
+
+  get width() {
+    return this.props.width
+  }
+
+  get height() {
+    return this.props.height
   }
 
   update() {
@@ -69,6 +81,8 @@ export class Area implements GameObject {
   private placeCards() {
     if (this.cardPlacement === 'stack') {
       this.placeCardsStacked()
+    } else if (this.cardPlacement === 'grid') {
+      this.placeCardsGrid()
     }
   }
 
@@ -78,6 +92,27 @@ export class Area implements GameObject {
         x: this.mesh.position.x,
         y: this.mesh.position.y,
         z: this.mesh.position.z + index * 0.01
+      })
+    })
+  }
+
+  private placeCardsGrid() {
+    const spacing = 0.1
+    const cardWidth = this.cards[0].width
+    const cardHeight = this.cards[0].height
+
+    // TODO: Fix this
+    const columns = Math.floor((this.width - spacing) / cardWidth)
+    const rows = Math.floor((this.height - spacing) / cardHeight)
+
+    this.cards.forEach((card, index) => {
+      const column = index % columns
+      const row = Math.floor(index / rows)
+      
+      card.move({
+        x: this.mesh.position.x + (column * cardWidth) + (column * spacing),
+        y: this.mesh.position.y + (row * cardHeight) + (row * spacing),
+        z: this.mesh.position.z
       })
     })
   }

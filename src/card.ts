@@ -14,7 +14,6 @@ export type CardProps = {
   depth: number
   front: string
   back: string
-  position?: Position
 }
 
 export class Card implements GameObject {
@@ -28,6 +27,7 @@ export class Card implements GameObject {
     z: 0,
   }
   private area?: Area
+  private props: CardProps
 
   constructor(props: CardProps) {
     const borderMaterial = createMaterial({ texture: './bg-stone.jpg' })
@@ -44,15 +44,23 @@ export class Card implements GameObject {
       frontMaterial,
       backMaterial,
     ])
-
-    if (props.position) {
-      this.position = props.position
-      this.mesh.position.set(this.position.x, this.position.y, this.position.z)
-    }
+    this.props = props
   }
 
   get uuid() {
     return this.mesh.uuid
+  }
+
+  get width() {
+    return this.props.width
+  }
+
+  get height() {
+    return this.props.height
+  }
+  
+  get depth() {
+    return this.props.depth
   }
 
   flip() {

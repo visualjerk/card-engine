@@ -11,6 +11,7 @@ const table = createArea({
   width: 10,
   height: 7,
   texture: './bg-table2.jpg',
+  cardPlacement: 'grid',
 })
 
 const playerArea = createArea({
