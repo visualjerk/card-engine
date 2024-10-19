@@ -6,7 +6,7 @@ export type GameObject = {
   mesh: THREE.Mesh
 
   on(event: keyof GameEvents, callback: (event: GameEvents[keyof GameEvents]) => void): void
-  dispatch(event: keyof GameEvents): void
+  dispatch(event: keyof GameEvents, data?: GameEvents[keyof GameEvents]): void
   
   update(): void
 }

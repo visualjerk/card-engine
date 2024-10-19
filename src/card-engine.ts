@@ -42,6 +42,7 @@ export function createCardEngine() {
     window.addEventListener('resize', onWindowResize)
     window.addEventListener('pointermove', onMouseMove)
     window.addEventListener('pointerup', onClick)
+    window.addEventListener('keydown', onKeyDown)
   }
 
   function onWindowResize() {
@@ -57,13 +58,21 @@ export function createCardEngine() {
   }
 
   function onClick() {
+    const object = getHoveredObject()
+    object?.dispatch('click')
+  }
+
+  function onKeyDown(event: KeyboardEvent) {
+    const object = getHoveredObject()
+    object?.dispatch('keydown', { key: event.key })
+  }
+
+  function getHoveredObject() {
     const firstIntersect = intersects[0]
     if (firstIntersect == null) {
       return
     }
-
-    const object = objects.get(firstIntersect.object.uuid)
-    object?.dispatch('click')
+    return objects.get(firstIntersect.object.uuid)
   }
 
   function animate() {

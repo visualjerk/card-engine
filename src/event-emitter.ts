@@ -1,7 +1,10 @@
 import * as THREE from 'three'
 
 export type GameEvents = {
-  click: {}
+  click: {},
+  keydown: {
+    key: string
+  },
 }
 
 export class EventEmitter {
