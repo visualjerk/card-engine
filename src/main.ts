@@ -29,7 +29,6 @@ const playerDeck = createArea({
 const playerHand = createArea({
   width: 6,
   height: 2,
-  texture: './bg-table.jpg',
   position: {
     x: 0,
     y: -2.5,

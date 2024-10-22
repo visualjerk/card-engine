@@ -10,7 +10,7 @@ export type CardPlacement = 'stack' | 'grid' | 'fan'
 export type AreaProps = {
   width: number
   height: number
-  texture: string
+  texture?: string
   position?: Position
   cardPlacement?: CardPlacement
 }
@@ -26,7 +26,9 @@ export class Area implements GameObject {
 
   constructor(props: AreaProps) {
     const geometry = new THREE.PlaneGeometry(props.width, props.height)
-    const material = createMaterial({ texture: props.texture })
+    const material = createMaterial({
+      texture: props.texture
+    })
     
     this.mesh = new THREE.Mesh(
       geometry,

@@ -16,10 +16,21 @@ function getTexture(textureUrl: string) {
 }
 
 type MaterialProps = {
-  texture: string
+  texture?: string
 }
 
 export function createMaterial(props: MaterialProps) {
+  if (props.texture == null) {
+    return createTransparentMaterial()
+  }
+  
   const texture = getTexture(props.texture)
   return new THREE.MeshBasicMaterial({ map: texture })
+}
+
+export function createTransparentMaterial() {
+  return new THREE.MeshBasicMaterial({
+    transparent: true,
+    opacity: 0,
+  })
 }
