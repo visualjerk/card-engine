@@ -8,6 +8,8 @@ import { Area } from './area'
 const ROTATION_STEP = 0.4
 const POSITION_STEP = 0.1
 
+export type CardVisibility = 'faceup' | 'facedown'
+
 export type CardProps = {
   height: number
   width: number
@@ -20,7 +22,7 @@ export class Card implements GameObject {
   mesh: THREE.Mesh
 
   private eventEmitter = new EventEmitter()
-  private isFlipped = false
+  private visibility: CardVisibility = 'facedown'
   private position: Position = {
     x: 0,
     y: 0,
@@ -65,7 +67,11 @@ export class Card implements GameObject {
   }
 
   flip() {
-    this.isFlipped = !this.isFlipped
+    this.visibility = this.visibility === 'facedown' ? 'faceup' : 'facedown'
+  }
+
+  setVisibility(visibility: CardVisibility) {
+    this.visibility = visibility
   }
 
   move(position: Position) {
@@ -101,7 +107,7 @@ export class Card implements GameObject {
 
   private updateFlipRotation() {
     // Calculate the target rotation for the card
-    const targetRotation = this.isFlipped ? Math.PI : 0;
+    const targetRotation = this.visibility === 'faceup' ? Math.PI : 0;
 
     // Calculate the rotation difference
     let rotationDifference = Math.abs(targetRotation - this.mesh.rotation.y);
@@ -113,7 +119,7 @@ export class Card implements GameObject {
     }
 
     // Otherwise, continue rotating
-    const rotationStep = this.isFlipped ? ROTATION_STEP : -ROTATION_STEP;
+    const rotationStep = this.visibility === 'faceup' ? ROTATION_STEP : -ROTATION_STEP;
     this.mesh.rotation.y += rotationStep
   }
 

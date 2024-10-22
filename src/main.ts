@@ -35,6 +35,7 @@ const playerHand = createArea({
     z: 0.001,
   },
   cardPlacement: 'fan',
+  cardVisibility: 'faceup'
 })
 
 engine.add(table)
@@ -57,14 +58,12 @@ function initCard() {
   const handleClick = () => {
     if (state === 'deck') {
       state = 'hand'
-      card.flip()
       card.placeOn(playerHand)
     } else if (state === 'hand') {
       state = 'table'
       card.placeOn(table)
     } else if (state === 'table') {
       state = 'deck'
-      card.flip()
       card.placeOn(playerDeck)
     }
   }

@@ -3,7 +3,7 @@ import { EventEmitter } from "./event-emitter"
 import { GameObject } from "./game-object"
 import { createMaterial } from './material'
 import { Position } from './position'
-import { Card } from './card'
+import { Card, CardVisibility } from './card'
 
 export type CardPlacement = 'stack' | 'grid' | 'fan'
 
@@ -13,6 +13,7 @@ export type AreaProps = {
   texture?: string
   position?: Position
   cardPlacement?: CardPlacement
+  cardVisibility?: CardVisibility
 }
 
 export class Area implements GameObject {
@@ -23,6 +24,7 @@ export class Area implements GameObject {
   private props: AreaProps
 
   private cardPlacement: CardPlacement = 'stack'
+  private cardVisibility: CardVisibility = 'facedown'
 
   constructor(props: AreaProps) {
     const geometry = new THREE.PlaneGeometry(props.width, props.height)
@@ -41,6 +43,10 @@ export class Area implements GameObject {
 
     if (props.cardPlacement) {
       this.cardPlacement = props.cardPlacement
+    }
+
+    if (props.cardVisibility) {
+      this.cardVisibility = props.cardVisibility
     }
 
     this.props = props
@@ -72,6 +78,7 @@ export class Area implements GameObject {
 
   add(card: Card) {
     this.cards.push(card)
+    card.setVisibility(this.cardVisibility)
     this.placeCards()
   }
 
@@ -141,6 +148,7 @@ export class Area implements GameObject {
         cardAngle = centerAngle + (index / (this.cards.length - 1) - 0.5) * fanAngle;
       }
 
+      // TODO: Fix this for facedown cards
       card.rotate(cardAngle + Math.PI / 2); // Rotate card to face outward
       card.move({
         x: this.mesh.position.x + Math.cos(cardAngle) * fanRadius,
