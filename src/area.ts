@@ -17,12 +17,12 @@ export type AreaProps = {
 
 export class Area implements GameObject {
   mesh: THREE.Mesh
+  cards: Card[] = []
 
   private eventEmitter = new EventEmitter()
   private props: AreaProps
 
   private cardPlacement: CardPlacement = 'stack'
-  private cards: Card[] = []
 
   constructor(props: AreaProps) {
     const geometry = new THREE.PlaneGeometry(props.width, props.height)

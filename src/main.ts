@@ -1,6 +1,6 @@
 import './style.css'
 
-import { createCard } from './card'
+import { Card, createCard } from './card'
 import { createCardEngine } from './card-engine'
 import { createArea } from './area'
 
@@ -73,8 +73,31 @@ function initCard() {
   card.on('click', handleClick)
   engine.add(card)
   card.placeOn(playerDeck)
+  return card
 }
 
+const cards: Card[] = []
 for (let i = 0; i < 28; i++) {
-  initCard()
+  const card = initCard()
+  cards.push(card)
+}
+
+playerDeck.on('keydown', (event) => {
+  if (event.key === 's') {
+    const cards = playerDeck.cards
+    cards.forEach((card) => {
+      playerDeck.remove(card)
+    })
+    shuffleArray(cards)
+    cards.forEach((card) => {
+      playerDeck.add(card)
+    })
+  }
+})
+
+function shuffleArray(array: Card[]) {
+  for (let i = array.length - 1; i >= 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  }
 }

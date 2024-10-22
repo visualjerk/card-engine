@@ -1,11 +1,11 @@
 import * as THREE from 'three'
-import { GameEvents } from './event-emitter'
+import { EventListener, GameEvents } from './event-emitter'
 
 export type GameObject = {
   uuid: string
   mesh: THREE.Mesh
 
-  on(event: keyof GameEvents, callback: (event: GameEvents[keyof GameEvents]) => void): void
+  on<T extends keyof GameEvents>(event: T, callback: EventListener<T>): () => void
   dispatch(event: keyof GameEvents, data?: GameEvents[keyof GameEvents]): void
   
   update(): void

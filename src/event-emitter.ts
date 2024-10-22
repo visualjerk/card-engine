@@ -7,15 +7,18 @@ export type GameEvents = {
   },
 }
 
+export type EventListener<T extends keyof GameEvents> = (event: GameEvents[T]) => void
+export type EventOn<T extends keyof GameEvents> = (event: T, callback: EventListener<T>) => void
+
 export class EventEmitter {
   private eventEmitter = new THREE.EventDispatcher<GameEvents>()
 
-  on(event: keyof GameEvents, callback: (event: GameEvents[keyof GameEvents]) => void) {
+  on<T extends keyof GameEvents>(event: T, callback: EventListener<T>): () => void {
     this.eventEmitter.addEventListener(event, callback)
     return () => this.eventEmitter.removeEventListener(event, callback)
   }
 
-  dispatch(event: keyof GameEvents) {
-    this.eventEmitter.dispatchEvent({ type: event })
+  dispatch(event: keyof GameEvents, data?: GameEvents[keyof GameEvents]) {
+    this.eventEmitter.dispatchEvent({ type: event, ...data })
   }
 }
