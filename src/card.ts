@@ -20,9 +20,9 @@ export type CardProps = {
 
 export class Card implements GameObject {
   mesh: THREE.Mesh
+  visibility: CardVisibility = 'facedown'
 
   private eventEmitter = new EventEmitter()
-  private visibility: CardVisibility = 'facedown'
   private position: Position = {
     x: 0,
     y: 0,
@@ -37,7 +37,11 @@ export class Card implements GameObject {
     const frontMaterial = createMaterial({ texture: props.front })
     const backMaterial = createMaterial({ texture: props.back })
 
-    const geometry = new THREE.BoxGeometry(props.width, props.height, props.depth)
+    const geometry = new THREE.BoxGeometry(
+      props.width,
+      props.height,
+      props.depth
+    )
 
     this.mesh = new THREE.Mesh(geometry, [
       borderMaterial,
@@ -61,17 +65,13 @@ export class Card implements GameObject {
   get height() {
     return this.props.height
   }
-  
+
   get depth() {
     return this.props.depth
   }
 
   flip() {
     this.visibility = this.visibility === 'facedown' ? 'faceup' : 'facedown'
-  }
-
-  setVisibility(visibility: CardVisibility) {
-    this.visibility = visibility
   }
 
   move(position: Position) {
@@ -107,25 +107,27 @@ export class Card implements GameObject {
 
   private updateFlipRotation() {
     // Calculate the target rotation for the card
-    const targetRotation = this.visibility === 'faceup' ? Math.PI : 0;
+    const targetRotation = this.visibility === 'faceup' ? Math.PI : 0
 
     // Calculate the rotation difference
-    let rotationDifference = Math.abs(targetRotation - this.mesh.rotation.y);
+    let rotationDifference = Math.abs(targetRotation - this.mesh.rotation.y)
 
     // If the rotation is close enough to the target, snap to it
     if (rotationDifference < ROTATION_STEP) {
-      this.mesh.rotation.y = targetRotation;
-      return;
+      this.mesh.rotation.y = targetRotation
+      return
     }
 
     // Otherwise, continue rotating
-    const rotationStep = this.visibility === 'faceup' ? ROTATION_STEP : -ROTATION_STEP;
+    const rotationStep =
+      this.visibility === 'faceup' ? ROTATION_STEP : -ROTATION_STEP
     this.mesh.rotation.y += rotationStep
   }
 
   private updateRotation() {
     // Update the mesh step by step towards the target rotation
-    this.mesh.rotation.z += (this.rotation - this.mesh.rotation.z) * ROTATION_STEP
+    this.mesh.rotation.z +=
+      (this.rotation - this.mesh.rotation.z) * ROTATION_STEP
   }
 
   private updatePosition() {

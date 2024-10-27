@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import { EventEmitter } from "./event-emitter"
-import { GameObject } from "./game-object"
+import { EventEmitter } from './event-emitter'
+import { GameObject } from './game-object'
 import { createMaterial } from './material'
 import { Position } from './position'
 import { Card, CardVisibility } from './card'
@@ -29,16 +29,17 @@ export class Area implements GameObject {
   constructor(props: AreaProps) {
     const geometry = new THREE.PlaneGeometry(props.width, props.height)
     const material = createMaterial({
-      texture: props.texture
+      texture: props.texture,
     })
-    
-    this.mesh = new THREE.Mesh(
-      geometry,
-      material
-    )
+
+    this.mesh = new THREE.Mesh(geometry, material)
 
     if (props.position) {
-      this.mesh.position.set(props.position.x, props.position.y, props.position.z)
+      this.mesh.position.set(
+        props.position.x,
+        props.position.y,
+        props.position.z
+      )
     }
 
     if (props.cardPlacement) {
@@ -78,12 +79,12 @@ export class Area implements GameObject {
 
   add(card: Card) {
     this.cards.push(card)
-    card.setVisibility(this.cardVisibility)
+    card.visibility = this.cardVisibility
     this.placeCards()
   }
 
   remove(card: Card) {
-    this.cards = this.cards.filter(c => c.uuid !== card.uuid)
+    this.cards = this.cards.filter((c) => c.uuid !== card.uuid)
     this.placeCards()
   }
 
@@ -107,7 +108,7 @@ export class Area implements GameObject {
       card.move({
         x: this.mesh.position.x,
         y: this.mesh.position.y,
-        z: this.mesh.position.z + index * 0.01
+        z: this.mesh.position.z + index * 0.01,
       })
     })
   }
@@ -119,43 +120,62 @@ export class Area implements GameObject {
 
     const columns = Math.floor((this.width + spacing) / (cardWidth + spacing))
 
-    const rowWidth = (cardWidth + spacing) * Math.min(this.cards.length, columns) - spacing
-    const columnHeight = (cardHeight + spacing) * Math.ceil(this.cards.length / columns) - spacing
+    const rowWidth =
+      (cardWidth + spacing) * Math.min(this.cards.length, columns) - spacing
+    const columnHeight =
+      (cardHeight + spacing) * Math.ceil(this.cards.length / columns) - spacing
 
     this.cards.forEach((card, index) => {
       const column = index % columns
       const row = Math.floor(index / columns)
-      
+
       card.rotate(0)
       card.move({
-        x: this.mesh.position.x + (column * cardWidth) + (column * spacing) - rowWidth / 2 + cardWidth / 2,
-        y: this.mesh.position.y - (row * cardHeight) - (row * spacing) + columnHeight / 2 - cardHeight / 2,
-        z: this.mesh.position.z
+        x:
+          this.mesh.position.x +
+          column * cardWidth +
+          column * spacing -
+          rowWidth / 2 +
+          cardWidth / 2,
+        y:
+          this.mesh.position.y -
+          row * cardHeight -
+          row * spacing +
+          columnHeight / 2 -
+          cardHeight / 2,
+        z: this.mesh.position.z,
       })
     })
   }
 
   private placeCardsFanned() {
-    const fanAngle = Math.min(Math.PI / 40 * this.cards.length, Math.PI / 4); // Max 45 degrees total fan spread
+    const fanAngle = Math.min((Math.PI / 40) * this.cards.length, Math.PI / 4) // Max 45 degrees total fan spread
     const fanRadius = this.width / 2
     const centerAngle = -Math.PI / 2 // Center the fan at the top of the area
 
     this.cards.forEach((card, index) => {
-      let cardAngle;
+      let cardAngle
       if (this.cards.length === 1) {
-        cardAngle = centerAngle;
+        cardAngle = centerAngle
       } else {
-        cardAngle = centerAngle + (index / (this.cards.length - 1) - 0.5) * fanAngle;
+        cardAngle =
+          centerAngle + (index / (this.cards.length - 1) - 0.5) * fanAngle
       }
+      // Rotate card to face outward
+      let rotation = cardAngle + Math.PI / 2
+      rotation = card.visibility === 'faceup' ? rotation : -rotation
 
-      // TODO: Fix this for facedown cards
-      card.rotate(cardAngle + Math.PI / 2); // Rotate card to face outward
+      card.rotate(rotation)
       card.move({
         x: this.mesh.position.x + Math.cos(cardAngle) * fanRadius,
-        y: this.mesh.position.y - Math.sin(cardAngle) * fanRadius - fanRadius + card.height / 4,
-        z: this.mesh.position.z + index * 0.01 // Slight z-offset for layering
-      });
-    });
+        y:
+          this.mesh.position.y -
+          Math.sin(cardAngle) * fanRadius -
+          fanRadius +
+          card.height / 4,
+        z: this.mesh.position.z + index * 0.01, // Slight z-offset for layering
+      })
+    })
   }
 }
 

@@ -36,7 +36,7 @@ const playerHand = createArea({
     z: 0.001,
   },
   cardPlacement: 'fan',
-  cardVisibility: 'faceup',
+  // cardVisibility: 'faceup',
 })
 
 engine.add(table)
