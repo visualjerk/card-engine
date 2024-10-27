@@ -12,6 +12,7 @@ const table = createArea({
   height: 7,
   texture: './bg-table2.jpg',
   cardPlacement: 'grid',
+  cardVisibility: 'faceup',
 })
 
 const playerDeck = createArea({
@@ -35,7 +36,7 @@ const playerHand = createArea({
     z: 0.001,
   },
   cardPlacement: 'fan',
-  cardVisibility: 'faceup'
+  cardVisibility: 'faceup',
 })
 
 engine.add(table)
@@ -95,7 +96,7 @@ playerDeck.on('keydown', (event) => {
 
 function shuffleArray(array: Card[]) {
   for (let i = array.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
   }
 }
